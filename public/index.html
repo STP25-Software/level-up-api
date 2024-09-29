@@ -1,1 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Level Up Form</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        h1 {
+            text-align: center;
+        }
+        .hidden {
+            display: none;
+        }
+        label {
+            display: block;
+            margin: 10px 0 5px;
+        }
+        input, select, textarea {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+        }
+        button {
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+            width: 100%;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <h1>Level Up Form</h1>
+    <p>This event is only for Ain Shams engineering students. A feedback form will be sent to you after the event. Please fill it for our improvement!</p>
+
+    <form id="levelUpForm">
+        <label for="name">1. Name</label>
+        <input type="text" id="name" name="name" required>
+
+        <label for="mobile_number">2. Mobile number (must have WhatsApp)</label>
+        <input type="text" id="mobile_number" name="mobile_number" required>
+
+        <label for="email">3. Email</label>
+        <input type="email" id="email" name="email" required>
+
+        <label for="academic_year">4. Academic year</label>
+        <select id="academic_year" name="academic_year" required>
+            <option value="" disabled selected>Select your academic year</option>
+            <option value="freshman">Freshman</option>
+            <option value="sophomore">Sophomore</option>
+            <option value="junior">Junior</option>
+            <option value="senior1">Senior 1</option>
+            <option value="senior2">Senior 2</option>
+        </select>
+
+        <label for="specialization">5. Specialization</label>
+        <select id="specialization" name="specialization" required>
+            <option value="" disabled selected>Select your specialization</option>
+            <option value="Preparatory">Preparatory</option>
+            <option value="Electrical">Electrical</option>
+            <option value="Mechanical">Mechanical</option>
+            <option value="Architecture">Architecture</option>
+            <option value="Civil">Civil</option>
+        </select>
+
+        <label for="attendance_type">6. Choose what you want to attend/participate in:</label>
+        <select id="attendance_type" name="attendance_type" onchange="toggleHackathonFields()" required>
+            <option value="" disabled selected>Select your option</option>
+            <option value="event_attendee">Event Attendee</option>
+            <option value="hackathon_participant">Hackathon Participant</option>
+        </select>
+
+        <div id="hackathonFields" class="hidden">
+            <label for="hackathon_type">Choose hackathon type</label>
+            <select id="hackathon_type" name="hackathon_type" onchange="toggleSpecificHackathonFields()" required>
+                <option value="" disabled selected>Select hackathon type</option>
+                <option value="reverse_engineering">Reverse Engineering Competition</option>
+                <option value="ai_problem_solving">AI Problem Solving Competition</option>
+            </select>
+
+            <div id="reverseEngineeringFields" class="hidden">
+                <label for="team_name_reverse">7. Write down your team's name:</label>
+                <input type="text" id="team_name_reverse" name="team_name_reverse">
+                <label for="reason_reverse">8. Why did you apply for the hackathon?</label>
+                <textarea id="reason_reverse" name="reason_reverse"></textarea>
+                <label for="previous_experience_reverse">9. Mention your previous experience in competitions:</label>
+                <textarea id="previous_experience_reverse" name="previous_experience_reverse"></textarea>
+                <label for="team_members_reverse">10. Mention the members of the team (should apply in this form too!):</label>
+                <textarea id="team_members_reverse" name="team_members_reverse"></textarea>
+            </div>
+
+            <div id="aiProblemSolvingFields" class="hidden">
+                <label for="team_name_ai">11. Write down your team's name:</label>
+                <input type="text" id="team_name_ai" name="team_name_ai">
+                <label for="reason_ai">12. Why did you apply for the AI competition?</label>
+                <textarea id="reason_ai" name="reason_ai"></textarea>
+                <label for="previous_experience_ai">13. Mention your previous experience in AI competitions:</label>
+                <textarea id="previous_experience_ai" name="previous_experience_ai"></textarea>
+                <label for="team_members_ai">14. Mention the members of the team (should apply in this form too!):</label>
+                <textarea id="team_members_ai" name="team_members_ai"></textarea>
+            </div>
+        </div>
+
+        <label for="expectations">15. What are your expectations about the event?</label>
+        <textarea id="expectations" name="expectations" required></textarea>
+
+        <label for="comments">16. Any comments?</label>
+        <textarea id="comments" name="comments"></textarea>
+
+        <button type="submit">Submit</button>
+    </form>
+
+
+<script>
+    function toggleHackathonFields() {
+        const attendanceType = document.querySelector('select[name="attendance_type"]').value;
+        const hackathonFields = document.getElementById('hackathonFields');
+
+        // Show or hide hackathon fields based on attendance type
+        if (attendanceType === 'hackathon_participant') {
+            hackathonFields.style.display = 'block';
+            document.getElementById('hackathon_type').setAttribute('required', 'required'); // Make hackathon type required
+        } else {
+            hackathonFields.style.display = 'none';
+            document.getElementById('hackathon_type').removeAttribute('required'); // Remove requirement if not participant
+            document.getElementById('hackathon_type').value = ''; // Reset hackathon type
+            document.getElementById('reverseEngineeringFields').style.display = 'none'; // Hide Reverse Engineering fields
+            document.getElementById('aiProblemSolvingFields').style.display = 'none'; // Hide AI Problem Solving fields
+            clearRequiredFields(); // Clear all required fields
+        }
+    }
+
+    function toggleSpecificHackathonFields() {
+        const hackathonType = document.querySelector('select[name="hackathon_type"]').value;
+        const reverseEngineeringFields = document.getElementById('reverseEngineeringFields');
+        const aiProblemSolvingFields = document.getElementById('aiProblemSolvingFields');
+
+        // Show or hide fields based on selected hackathon type
+        if (hackathonType === 'reverse_engineering') {
+            reverseEngineeringFields.style.display = 'block';
+            aiProblemSolvingFields.style.display = 'none';
+            setRequiredFields('reverse');
+        } else if (hackathonType === 'ai_problem_solving') {
+            aiProblemSolvingFields.style.display = 'block';
+            reverseEngineeringFields.style.display = 'none';
+            setRequiredFields('ai');
+        } else {
+            reverseEngineeringFields.style.display = 'none';
+            aiProblemSolvingFields.style.display = 'none';
+            clearRequiredFields(); // Clear required fields
+        }
+    }
+
+    function setRequiredFields(type) {
+        // Clear all required attributes
+        clearRequiredFields();
+
+        // Set required attributes for the specific type
+        if (type === 'reverse') {
+            document.getElementById('team_name_reverse').setAttribute('required', 'required');
+            document.getElementById('reason_reverse').setAttribute('required', 'required');
+            document.getElementById('previous_experience_reverse').setAttribute('required', 'required');
+            document.getElementById('team_members_reverse').setAttribute('required', 'required');
+        } else if (type === 'ai') {
+            document.getElementById('team_name_ai').setAttribute('required', 'required');
+            document.getElementById('reason_ai').setAttribute('required', 'required');
+            document.getElementById('previous_experience_ai').setAttribute('required', 'required');
+            document.getElementById('team_members_ai').setAttribute('required', 'required');
+        }
+    }
+
+    function clearRequiredFields() {
+        // Clear required attributes for both fields
+        document.getElementById('team_name_reverse').removeAttribute('required');
+        document.getElementById('reason_reverse').removeAttribute('required');
+        document.getElementById('previous_experience_reverse').removeAttribute('required');
+        document.getElementById('team_members_reverse').removeAttribute('required');
+
+        document.getElementById('team_name_ai').removeAttribute('required');
+        document.getElementById('reason_ai').removeAttribute('required');
+        document.getElementById('previous_experience_ai').removeAttribute('required');
+        document.getElementById('team_members_ai').removeAttribute('required');
+    }
+
+    document.getElementById('levelUpForm').addEventListener('submit', async function (event) {
+        event.preventDefault();
+
+        const formData = new FormData(this);
+        const data = Object.fromEntries(formData);
+
+        // Set 'attendee' boolean based on attendance type
+        if (data.attendance_type === 'hackathon_participant') {
+            data.attendee = false;
+
+            // Add required fields for hackathon participants
+            const hackathonType = data.hackathon_type;
+
+            if (hackathonType === 'reverse_engineering') {
+                data.team_name = document.getElementById('team_name_reverse').value;
+                data.reason = document.getElementById('reason_reverse').value;
+                data.previous_experience = document.getElementById('previous_experience_reverse').value;
+                data.team_members = document.getElementById('team_members_reverse').value;
+            } else if (hackathonType === 'ai_problem_solving') {
+                data.team_name = document.getElementById('team_name_ai').value;
+                data.reason = document.getElementById('reason_ai').value;
+                data.previous_experience = document.getElementById('previous_experience_ai').value;
+                data.team_members = document.getElementById('team_members_ai').value;
+            }
+        } else {
+            data.attendee = true;
+        }
+
+        try {
+            const response = await fetch('http://localhost:3000/submit', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data),
+            });
+
+            if (response.ok) {
+                alert('Form submitted successfully!');
+                this.reset(); // Reset form fields after submission
+            } else {
+                const errorData = await response.json();
+                alert('Error submitting the form: ' + JSON.stringify(errorData));
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('An error occurred while submitting the form.');
+        }
+    });
+</script>
+
+
+
+</body>
+</html>
+
 

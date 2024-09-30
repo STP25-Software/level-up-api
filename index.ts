@@ -1,0 +1,10 @@
+import  express  from "express";
+import { db } from "./model/attendees";
+import { Attendees } from "./model/attendees";
+import { userRouter } from "./Routers/users";
+import { adminRouter } from "./Routers/admin";
+const app = express();
+app.use(express.json());
+app.use("/users",userRouter);
+app.use("/admin",adminRouter);
+app.listen(3000, () => console.log("Server started on port 3000"));

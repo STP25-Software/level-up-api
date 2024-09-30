@@ -5,6 +5,6 @@ import {userController} from "../controllers/userController";
 export const userRouter = Router();
 
 
-userRouter.post("/regester", userController.post);
+userRouter.post("/", userController.post);
 
 

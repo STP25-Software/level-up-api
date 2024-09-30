@@ -53,6 +53,7 @@ const get: getUserRequestHandler = async (req:getUserRequest,res:Response)=> {
       rows=rows.filter((attendee)=>attendee.competition===parseInt(req.query.competition));
     }
   }
+
   let users: userGet[] = [];
   rows.forEach((Attendee) => {
     users.push({

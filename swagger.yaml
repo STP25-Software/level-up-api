@@ -6,7 +6,7 @@ info:
   version: 1.0.11
 
 servers:
-  - url: "[url]"
+  - url: "http://localhost:3000"
 
 tags:
   - name: registrations

@@ -1,0 +1,211 @@
+openapi: 3.0.3
+
+info:
+  title: Level Up Form
+  description: Level up event resgistration form API docs.
+  version: 1.0.11
+
+servers:
+  - url: "http://localhost:3000"
+
+tags:
+  - name: registrations
+    description: Everything about registrations
+  - name: health
+    description: API health
+
+paths:
+  /api/registrations:
+  
+  
+    post:
+      tags:
+        - registrations
+      summary: Add a new register to the database
+      description: "Add a new register to the database.\n\n If the user is attending, the participation property will be (undefined | false | null)"
+      operationId: addRegister
+      requestBody:
+        description: Create a new register in the database
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Register'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/Register'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Register'
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+        '400':
+          description: Invalid input
+        '422':
+          description: Validation exception
+
+    get:
+      tags:
+        - registrations
+      summary: Retrieve all registrations
+      description: Returns a list of registrations
+      operationId: getAllRegistrations
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Register'          
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Register'
+            
+            
+  /api/registrations/{id}:
+    put:
+      tags:
+        - registrations
+      summary: Update an existing registration
+      description: Update an existing registration by Id
+      operationId: updateRegistration
+      parameters:
+        - name: id
+          in: path
+          description: ID of register
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        description: Update an existent registration in the database
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Register'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/Register'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Register'
+        required: true
+      responses:
+        '200':
+          description: Successful Updated
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: Registration not found
+
+    delete:
+      tags:
+        - registrations
+      summary: Deletes a Registration
+      description: delete a Registration
+      operationId: deleteRegistration
+      parameters:
+        - name: id
+          in: path
+          description: Delete an existing registration
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successfully deleted
+        '400':
+          description: Invalid ID Supplied
+        '404':
+          description: Regstration ID not found
+          
+  /api/health:
+    get:
+      tags:
+        - health
+      description: Returns {good}
+      responses:
+        '200':
+          description: Returns {good}
+          content:
+            application/json:
+              schema:
+                properties:
+                  message:
+                    type: string
+                    example: good
+      
+components:
+  schemas:
+    Register:
+      required:
+        - id
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 10
+        name:
+          type: string
+          example: doggie
+        phone:
+          type: string
+          example: +201234567890
+        email:
+          type: string
+          example: example@domain.com
+        year:
+          type: integer
+          format: int64
+          description: academic year
+          enum:
+           - 1
+           - 2
+           - 3
+           - 4
+           - 5
+        spec:
+          type: string
+          description: academic specialization
+          enum:
+            - preparatory
+            - electrical
+            - mechanical
+            - architecture
+            - civil
+        participation:
+          $ref: '#/components/schemas/Participation'
+        expectations:
+          type: string
+          example: It will be awesome
+        comments:
+          type: string
+          example: lovely-looking form
+      xml:
+        name: register
+    Participation:
+      type: object
+      properties:
+        competition:
+          type: string
+          enum:
+           - ai
+           - reverseEng
+        teamName:
+          type: string
+          example: Eagles
+        reason:
+          type: string
+          example: I love competitions
+        experience:
+          type: string
+          example: I'm an award winner programmer
+        teamMembers:
+          type: array
+          items:
+            type: string
+          example: "[Ali, Ahmed, Khaled]"
+      xml:
+        name: participation

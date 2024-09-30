@@ -1,4 +1,5 @@
 {
+  "dependencies": {
   "name": "level-up",
   "version": "1.0.0",
   "main": "index.ts",
@@ -13,6 +14,9 @@
     "@types/node": "^22.7.4",
     "@types/pg": "^8.11.10",
     "express": "^4.21.0",
-    "pg": "^8.13.0"
+    "pg": "^8.13.0",
+    "dotenv": "^16.4.5",
+    "swagger-ui-express": "^5.0.1",
+    "yamljs": "^0.3.0"
   }
 }

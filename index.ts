@@ -25,4 +25,9 @@ app.use(express.json());
 app.use("/api/registrations", userRouter);
 app.use("/api/admin",adminRouter);
 
+
+app.use("/api/health", (req, res) => {
+    res.send({ status: "ok" });
+})
+
 app.listen(3000, () => console.log("Server started on port 3000"));

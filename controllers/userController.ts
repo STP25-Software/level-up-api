@@ -54,14 +54,14 @@ reason=req.body.participation.reason;
   } else if (rows.find((r) => r.email === email)) {
     res.status(400).json({ message: "email already exists" });
     return;
-  } else if (year && year < 1 && year > 5) {
+  } else if (!year || (!(year >= 1 && year <= 5))) {
     res.status(400).json({ message: "academicyear is wrong" });
     return;
-  } else if (spec && spec < 1 && spec > 5) {
+  } else if (!spec || !(spec >= 1 && spec <= 5)) {
     res.status(400).json({ message: "spec is wrong" });
     return;
-  } else if (competition && competition < 1 && competition > 3) {
-    res.status(400).json({ message: "participation is wrong" });
+  } else if (!competition || !(competition >= 1 && competition <= 3)) {
+    res.status(400).json({ message: "competition is wrong" });
     return;
   } else {
     await db.query(

@@ -1,13 +1,17 @@
 export interface userPost {
   name: string;
   email: string;
-  academicyear: number;
-  spec:number;
-  competition: 0 | 1 | 2;
-  why: string | null;
+  phone: string;
+  year: number;
+  spec: number;
+  competition: number;
+  participation: {
+    teamName: string | null;
+    experience: string | null;
+    reason: string | null;
+  };
   comments: string | null;
   expectations: string | null;
-  teamname: string | null;
 }
 export enum acadmicEnum {
   freshman = 1,
@@ -25,19 +29,19 @@ export enum specializationEnum {
 }
 export enum participationNameEnum {
   "event attendee" = 1,
-  "hackathon participant",
   "reverse engineering competition",
   "AI problem solving competition",
 }
-export interface userGet
-{
+export interface userGet {
   name: string;
   email: string;
-  academicyear: string;
-  spec:string;
+  phone: string;
+  year: string;
+  spec: string;
   competition: string;
   why: string | null;
   comments: string | null;
   expectations: string | null;
+  experience: string | null;
   teamname: string | null;
 }

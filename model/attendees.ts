@@ -11,11 +11,13 @@ export const db = new Pool({
 export interface Attendees {
   name: string;
   email: string;
-  academicyear: number;
+  phone: string;
+  year: number;
   spec: number;
-  teamname:string|null
-  competition: 0|1|2;
-  why:string|null;
-  expectations:string|null;
-  comments:string|null;
+  competition: number;
+  reason: string | null;
+  teamName: string | null;
+  experience: string | null;
+  expectations: string | null;
+  comments: string | null;
 }

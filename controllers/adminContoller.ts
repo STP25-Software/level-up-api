@@ -6,8 +6,7 @@ import {
   participationNameEnum,
   userGet,
 } from "../requests/userRequest";
-import crypto from "crypto";
-import { getUserRequestHandler,getUserRequest} from "../requests/adimRequest";
+import { getUserRequestHandler, getUserRequest } from "../requests/adimRequest";
 const loginAdmin = async (
   req: Request<{}, {}, { username: string; password: string }, {}>,
   res: Response,
@@ -27,30 +26,92 @@ const loginAdmin = async (
   }
 };
 
+const gettry: getUserRequestHandler = async (
+  req: getUserRequest,
+  res: Response
+) => {
+  let querryString = "select * from attendees ";
+  let values = [];
+  let index: number = 1;
+  let isnotfirst = (num: number) => num > 1;
+  if (Object.entries(req.query).length !== 0) {
+    if (req.query.name) {
+      querryString += `where name = $${index++} `;
+      values.push(req.query.name);
+    }
+    if (req.query.email) {
+      querryString += `${
+        isnotfirst(index) ? "AND" : "where"
+      } email = $${index++} `;
+      values.push(req.query.email);
+    }
+    if (!isNaN(parseInt(req.query.year))) {
+      querryString += `${
+        isnotfirst(index) ? "AND" : "where"
+      } year = $${index++} `;
+      values.push(req.query.year);
+    }
+    if (!isNaN(parseInt(req.query.spec))) {
+      querryString += `${
+        isnotfirst(index) ? "AND" : "where"
+      } spec = $${index++} `;
+      values.push(req.query.spec);
+    }
+    if (!isNaN(parseInt(req.query.competition))) {
+      querryString += `${
+        isnotfirst(index) ? "AND" : "where"
+      } competition = $${index++} `;
+      values.push(req.query.competition);
+    }
+  }
+  let rows: Attendees[] = (await db.query(querryString, values)).rows;
+  let users: userGet[] = [];
+  rows.forEach((Attendee) => {
+    users.push({
+      name: Attendee.name,
+      email: Attendee.email,
+      phone: Attendee.phone,
+      year: acadmicEnum[Attendee.year],
+      spec: specializationEnum[Attendee.spec],
+      competition: participationNameEnum[Attendee.competition],
+      why: Attendee.reason,
+      comments: Attendee.comments,
+      expectations: Attendee.expectations,
+      teamname: Attendee.teamName,
+      experience: Attendee.experience,
+    });
+  });
 
-const get: getUserRequestHandler = async (req:getUserRequest,res:Response)=> {
+  res.status(200).json(users);
+};
+const get: getUserRequestHandler = async (
+  req: getUserRequest,
+  res: Response
+) => {
   let rows: Attendees[] = (await db.query("select * from attendees")).rows;
-  if(Object.entries(req.query).length!==0)
-  {
-    if(req.query.name)
-    {
-      rows=rows.filter((attendee)=>attendee.name.toLowerCase().includes(req.query.name.toLowerCase()));
+  if (Object.entries(req.query).length !== 0) {
+    if (req.query.name) {
+      rows = rows.filter((attendee) =>
+        attendee.name.toLowerCase().includes(req.query.name.toLowerCase())
+      );
     }
-    if(req.query.email)
-    {
-      rows=rows.filter((attendee)=>attendee.email===req.query.email);
+    if (req.query.email) {
+      rows = rows.filter((attendee) => attendee.email === req.query.email);
     }
-    if(!isNaN(parseInt(req.query.academicyear)))
-    {
-      rows=rows.filter((attendee)=>attendee.academicyear===parseInt(req.query.academicyear));
+    if (!isNaN(parseInt(req.query.year))) {
+      rows = rows.filter(
+        (attendee) => attendee.year === parseInt(req.query.year)
+      );
     }
-    if(!isNaN(parseInt(req.query.spec)))
-    {
-      rows=rows.filter((attendee)=>attendee.spec===parseInt(req.query.spec));
+    if (!isNaN(parseInt(req.query.spec))) {
+      rows = rows.filter(
+        (attendee) => attendee.spec === parseInt(req.query.spec)
+      );
     }
-    if(!isNaN(parseInt(req.query.competition)))
-    {
-      rows=rows.filter((attendee)=>attendee.competition===parseInt(req.query.competition));
+    if (!isNaN(parseInt(req.query.competition))) {
+      rows = rows.filter(
+        (attendee) => attendee.competition === parseInt(req.query.competition)
+      );
     }
   }
 
@@ -59,13 +120,15 @@ const get: getUserRequestHandler = async (req:getUserRequest,res:Response)=> {
     users.push({
       name: Attendee.name,
       email: Attendee.email,
-      academicyear: acadmicEnum[Attendee.academicyear],
+      phone: Attendee.phone,
+      year: acadmicEnum[Attendee.year],
       spec: specializationEnum[Attendee.spec],
       competition: participationNameEnum[Attendee.competition],
-      why: Attendee.why,
+      why: Attendee.reason,
       comments: Attendee.comments,
       expectations: Attendee.expectations,
-      teamname: Attendee.teamname,
+      teamname: Attendee.teamName,
+      experience: Attendee.experience,
     });
   });
 
@@ -91,13 +154,15 @@ const getbyid: RequestHandler = async (
         let userToBeSent: userGet = {
           name: user.name,
           email: user.email,
-          academicyear: acadmicEnum[user.academicyear],
+          phone: user.phone,
+          experience: user.experience,
+          year: acadmicEnum[user.year],
           spec: specializationEnum[user.spec],
           competition: participationNameEnum[user.competition],
-          why: user.why,
+          why: user.reason,
           comments: user.comments,
           expectations: user.expectations,
-          teamname: user.teamname,
+          teamname: user.teamName,
         };
         res.status(200).json(userToBeSent);
       } else {
@@ -141,8 +206,8 @@ const deleteRegister: RequestHandler = async (req: Request, res: Response) => {
 };
 
 export const adminController = {
- get,
- getbyid,
- deleteRegister,
- loginAdmin
+  get: gettry,
+  getbyid,
+  deleteRegister,
+  loginAdmin,
 };

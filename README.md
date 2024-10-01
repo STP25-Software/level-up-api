@@ -21,18 +21,16 @@ The api for the Level Up 3.0 event.
 - Request body example in JSON:
     ```json
     {
-        "id": 10,
         "name": "doggie",
         "phone": "201234567890",
         "email": "example@domain.com",
         "year": 1,
-        "spec": "preparatory",
+        "spec": 1,
+        "competition": 2,
         "participation": {
-            "competition": "ai",
             "teamName": "Eagles",
             "reason": "I love competitions",
             "experience": "I'm an award winner programmer",
-            "teamMembers": "[Ali, Ahmed, Khaled]"
         },
         "expectations": "It will be awesome",
         "comments": "lovely-looking form"

@@ -1,0 +1,21 @@
+{
+    "version": 2,
+    "builds": [
+      {
+        "src": "index.ts",
+        "use": "@vercel/node",
+        "config": {
+          "includeFiles": [
+            "swagger.yaml"
+          ]
+        }
+      }
+    ],
+    "routes": [
+      {
+        "src": "/(.*)",
+        "dest": "/index.ts"
+      }
+    ]
+}
+  

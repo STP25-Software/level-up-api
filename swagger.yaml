@@ -139,20 +139,15 @@ paths:
 components:
   schemas:
     Register:
-      required:
-        - id
+
       type: object
       properties:
-        id:
-          type: integer
-          format: int64
-          example: 10
         name:
           type: string
           example: doggie
         phone:
           type: string
-          example: +201234567890
+          example: 01234567890
         email:
           type: string
           example: example@domain.com
@@ -167,14 +162,24 @@ components:
            - 4
            - 5
         spec:
-          type: string
+          type: integer
+          format: int64
           description: academic specialization
           enum:
-            - preparatory
-            - electrical
-            - mechanical
-            - architecture
-            - civil
+            - preparatory = 1
+            - electrical = 2
+            - mechanical = 3
+            - architecture = 4
+            - civil = 5
+          example: 1
+        competition:
+          type: integer
+          format: int64
+          enum:
+           - attend = 1
+           - reverseEng = 2
+           - ai = 3
+          example: 1
         participation:
           $ref: '#/components/schemas/Participation'
         expectations:
@@ -188,11 +193,6 @@ components:
     Participation:
       type: object
       properties:
-        competition:
-          type: string
-          enum:
-           - ai
-           - reverseEng
         teamName:
           type: string
           example: Eagles
@@ -202,10 +202,5 @@ components:
         experience:
           type: string
           example: I'm an award winner programmer
-        teamMembers:
-          type: array
-          items:
-            type: string
-          example: "[Ali, Ahmed, Khaled]"
       xml:
         name: participation

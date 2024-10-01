@@ -12,6 +12,21 @@ export enum specializationEnum {
 
 let post: RequestHandler = async (req: Request<{}, {}, userPost, {}>, res) => {
   let rows: Attendees[] = (await db.query("select * from attendees")).rows;
+  let teamName: string | null = null;
+  let experience:string | null =null;
+  let reason:string | null = null;
+  if(req.body.competition===1)
+  {
+teamName=null;
+experience=null;
+reason=null;
+  }
+  else
+  {
+teamName=req.body.participation.teamName;
+ experience=req.body.participation.experience;
+reason=req.body.participation.reason;
+  }
   const {
     name,
     email,
@@ -20,8 +35,7 @@ let post: RequestHandler = async (req: Request<{}, {}, userPost, {}>, res) => {
     spec,
     competition,
     comments,
-    expectations,
-    participation: { experience, reason, teamName }, // Corrected "participation"
+    expectations,// Corrected "participation"
   } = req.body;
   if (name && name.length < 5) {
     res.status(400).json({ message: "name is too short" });

@@ -1,12 +1,18 @@
-import { Client, Pool } from "pg";
+import { Pool } from "pg";
+
+// export const db = new Pool({
+//   user: "postgres",
+//   password: "24685",
+//   host: "localhost",
+//   database: "test1",
+//   port: 5432,
+// });
 
 export const db = new Pool({
-  user: "postgres",
-  host: "localhost",
-  database: "test1",
-  password: "24685",
-  port: 5432,
+  connectionString: process.env.DATABASE_URL,
 });
+
+
 
 export interface Attendees {
   name: string;

@@ -5,11 +5,9 @@ export interface userPost {
   year: number;
   spec: number;
   competition: number;
-  participation: {
-    teamName: string | null;
-    experience: string | null;
-    reason: string | null;
-  };
+  teamName: string | null;
+  experience: string | null;
+  reason: string | null;
   comments: string | null;
   expectations: string | null;
 }

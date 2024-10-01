@@ -1,8 +1,8 @@
 import  express  from "express";
-import { db } from "./model/attendees";
-import { Attendees } from "./model/attendees";
+// import { db } from "./model/registrations";
+// import { Attendees } from "./model/registrations";
 import { userRouter } from "./Routers/users";
-import { adminRouter } from "./Routers/admin";
+// import { adminRouter } from "./Routers/admin";
 
 const swaggerUI = require("swagger-ui-express");
 const YAML = require("yamljs");
@@ -23,7 +23,7 @@ app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(swaggerDocument));
 
 app.use(express.json());
 app.use("/api/registrations", userRouter);
-app.use("/api/admin",adminRouter);
+// app.use("/api/admin",adminRouter);
 
 
 app.use("/api/health", (req, res) => {

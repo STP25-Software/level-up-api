@@ -1,5 +1,5 @@
 import { RequestHandler, Response, Request, raw } from "express";
-import { Attendees, db } from "../model/attendees";
+import { Registrations, db } from "../model/registrations";
 import { userPost } from "../requests/userRequest";
 
 export enum specializationEnum {
@@ -13,7 +13,7 @@ export enum specializationEnum {
 let post: RequestHandler = async (req: Request<{}, {}, userPost, {}>, res) => {
   try
   {
-  let rows: Attendees[] = (await db.query("select * from attendees")).rows;
+  let rows: Registrations[] = (await db.query("select * from registrations")).rows;
   let {
     name,
     email,
@@ -72,7 +72,9 @@ let post: RequestHandler = async (req: Request<{}, {}, userPost, {}>, res) => {
     } 
   else {
     await db.query(
-      "insert into attendees(name,email,year,spec,teamname,competition,expectations,comments,reason,experience,phone) values($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11)",
+      `insert into registrations
+      (name,email,year,spec,"teamName",competition,expectations,comments,reason,experience,phone)
+      values ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11)`,
       [
         name,
         email,

@@ -1,21 +1,21 @@
-import { Router } from "express";
-import { adminController } from "../controllers/adminContoller";
-export const adminRouter = Router();
+// import { Router } from "express";
+// import { adminController } from "../controllers/adminContoller";
+// export const adminRouter = Router();
 
-adminRouter.get(
-  "/",
-  adminController.loginAdmin,
-  adminController.get
-);
+// adminRouter.get(
+//   "/",
+//   adminController.loginAdmin,
+//   adminController.get
+// );
 
-adminRouter.get(
-  "/:index",
-  adminController.loginAdmin,
-  adminController.getbyid
-);
+// adminRouter.get(
+//   "/:index",
+//   adminController.loginAdmin,
+//   adminController.getbyid
+// );
 
-adminRouter.delete(
-  "/:index",
-  adminController.loginAdmin,
-  adminController.deleteRegister
-);
+// adminRouter.delete(
+//   "/:index",
+//   adminController.loginAdmin,
+//   adminController.deleteRegister
+// );

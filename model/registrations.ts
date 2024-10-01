@@ -1,4 +1,9 @@
 import { Pool } from "pg";
+import dotenv from "dotenv";
+
+// Load environment variables from .env file
+dotenv.config();
+
 
 // export const db = new Pool({
 //   user: "postgres",
@@ -14,7 +19,7 @@ export const db = new Pool({
 
 
 
-export interface Attendees {
+export interface Registrations {
   name: string;
   email: string;
   phone: string;

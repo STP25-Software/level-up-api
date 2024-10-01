@@ -30,7 +30,7 @@
 //   req: getUserRequest,
 //   res: Response
 // ) => {
-//   let querryString = "select * from attendees ";
+//   let querryString = "select * from Registrations ";
 //   let values = [];
 //   let index: number = 1;
 //   let isnotfirst = (num: number) => num > 1;
@@ -63,8 +63,14 @@
 //       } competition = $${index++} `;
 //       values.push(req.query.competition);
 //     }
+//     if (req.query.teamName) {
+//       querryString += `${
+//         isnotfirst(index) ? "AND" : "where"
+//       } "teamName" = $${index++} `;
+//       values.push(req.query.teamName);
+//     }
 //   }
-//   let rows: Attendees[] = (await db.query(querryString, values)).rows;
+//   let rows: Registrations[] = (await db.query(querryString, values)).rows;
 //   let users: userGet[] = [];
 //   rows.forEach((Attendee) => {
 //     users.push({
@@ -88,7 +94,8 @@
 //   req: getUserRequest,
 //   res: Response
 // ) => {
-//   let rows: Attendees[] = (await db.query("select * from attendees")).rows;
+//   let rows: Registrations[] = (await db.query("select * from Registrations"))
+//     .rows;
 //   if (Object.entries(req.query).length !== 0) {
 //     if (req.query.name) {
 //       rows = rows.filter((attendee) =>
@@ -136,19 +143,20 @@
 // };
 
 // const getbyid: RequestHandler = async (
-//   req: Request<any, Attendees, {}, {}>,
+//   req: Request<any, Registrations, {}, {}>,
 //   res: Response
 // ) => {
 //   console.log(req.params.index);
 //   const id = parseInt(req.params.index, 10);
-//   let registrations: Attendees[] = (await db.query("select * from attendees"))
-//     .rows;
+//   let registrations: Registrations[] = (
+//     await db.query("select * from Registrations")
+//   ).rows;
 //   if (isNaN(id) || id < 0 || id >= registrations.length) {
 //     res.status(400).json({ error: "invalid registration id." });
 //   } else {
 //     try {
-//       const user: Attendees = (
-//         await db.query("select * from attendees where id = $1", [id])
+//       const user: Registrations = (
+//         await db.query("select * from Registrations where id = $1", [id])
 //       ).rows[0];
 //       if (user) {
 //         let userToBeSent: userGet = {
@@ -178,23 +186,25 @@
 // const deleteRegister: RequestHandler = async (req: Request, res: Response) => {
 //   const id = parseInt(req.params.index, 10);
 
-//   let registrations: Attendees[] = (await db.query("select * from attendees"))
-//     .rows;
+//   let registrations: Registrations[] = (
+//     await db.query("select * from Registrations")
+//   ).rows;
 
 //   if (isNaN(id) || id < 0 || id >= registrations.length) {
 //     res.status(400).json({ error: "invalid registration id." });
 //   } else {
 //     try {
-//       const user = await db.query("select * from attendees where id = $1", [
+//       const user = await db.query("select * from Registrations where id = $1", [
 //         id,
 //       ]);
 
 //       if (user.rows.length === 0) {
 //         res.status(404).json({ message: "Registration  not found." });
 //       } else {
-//         const result = await db.query("DELETE FROM attendees WHERE id = $1", [
-//           id,
-//         ]);
+//         const result = await db.query(
+//           "DELETE FROM Registrations WHERE id = $1",
+//           [id]
+//         );
 //         registrations.splice(id, 1);
 //         res.status(200).json({ message: "Registration deleted successfully." });
 //       }
@@ -212,10 +222,8 @@
 //   loginAdmin,
 // };
 
-
-
 // // import { RequestHandler, Response, Request, NextFunction } from "express";
-// // import { Attendees, db } from "../model/attendees";
+// // import { Registrations, db } from "../model/Registrations";
 // // import {
 // //   acadmicEnum,
 // //   specializationEnum,
@@ -224,7 +232,7 @@
 // // } from "../requests/userRequest";
 // // import { getUserRequestHandler, getUserRequest } from "../requests/adimRequest";
 
-// // const transformToUser = (attendee: Attendees): userGet => ({
+// // const transformToUser = (attendee: Registrations): userGet => ({
 // //   name: attendee.name,
 // //   email: attendee.email,
 // //   phone: attendee.phone,
@@ -258,18 +266,18 @@
 // //   }
 // // };
 
-// // const getAttendees = async (
+// // const getRegistrations = async (
 // //   query: string,
 // //   values: any[]
-// // ): Promise<Attendees[]> => {
+// // ): Promise<Registrations[]> => {
 // //   const { rows } = await db.query(query, values);
 // //   return rows;
 // // };
 
-// // const getFilteredAttendees = async (
+// // const getFilteredRegistrations = async (
 // //   req: getUserRequest
-// // ): Promise<Attendees[]> => {
-// //   let queryString = "SELECT * FROM attendees";
+// // ): Promise<Registrations[]> => {
+// //   let queryString = "SELECT * FROM Registrations";
 // //   const values: any[] = [];
 // //   const conditions: string[] = [];
 // //   let index = 1;
@@ -292,15 +300,15 @@
 // //     queryString += " WHERE " + conditions.join(" AND ");
 // //   }
 
-// //   return await getAttendees(queryString, values);
+// //   return await getRegistrations(queryString, values);
 // // };
 
 // // const getTry: getUserRequestHandler = async (
 // //   req: getUserRequest,
 // //   res: Response
 // // ) => {
-// //   const attendees = await getFilteredAttendees(req);
-// //   const users = attendees.map(transformToUser);
+// //   const Registrations = await getFilteredRegistrations(req);
+// //   const users = Registrations.map(transformToUser);
 // //   res.status(200).json(users);
 // // };
 
@@ -308,9 +316,9 @@
 // //   req: getUserRequest,
 // //   res: Response
 // // ) => {
-// //   let attendees = await getAttendees("SELECT * FROM attendees", []);
+// //   let Registrations = await getRegistrations("SELECT * FROM Registrations", []);
 // //   if (Object.entries(req.query).length !== 0) {
-// //     attendees = attendees.filter((attendee) => {
+// //     Registrations = Registrations.filter((attendee) => {
 // //       if (
 // //         req.query.name &&
 // //         !attendee.name.toLowerCase().includes(req.query.name.toLowerCase())
@@ -336,19 +344,19 @@
 // //     });
 // //   }
 
-// //   const users = attendees.map(transformToUser);
+// //   const users = Registrations.map(transformToUser);
 // //   res.status(200).json(users);
 // // };
 
 // // const getById: RequestHandler<
 // //   { index: string },
-// //   Attendees,
+// //   Registrations,
 // //   { username: string; password: string },
 // //   {}
 // // > = async (
 // //   req: Request<
 // //     { index: string },
-// //     Attendees,
+// //     Registrations,
 // //     { username: string; password: string },
 // //     {}
 // //   >,
@@ -362,8 +370,8 @@
 // //   }
 
 // //   try {
-// //     const user: Attendees = (
-// //       await db.query("SELECT * FROM attendees WHERE id = $1", [id])
+// //     const user: Registrations = (
+// //       await db.query("SELECT * FROM Registrations WHERE id = $1", [id])
 // //     ).rows[0];
 
 // //     if (!user) {
@@ -387,7 +395,7 @@
 // //   }
 
 // //   try {
-// //     const user = (await db.query("SELECT * FROM attendees WHERE id = $1", [id]))
+// //     const user = (await db.query("SELECT * FROM Registrations WHERE id = $1", [id]))
 // //       .rows[0];
 
 // //     if (!user) {
@@ -395,7 +403,7 @@
 // //       return;
 // //     }
 
-// //     await db.query("DELETE FROM attendees WHERE id = $1", [id]);
+// //     await db.query("DELETE FROM Registrations WHERE id = $1", [id]);
 // //     res.status(200).json({ message: "Registration deleted successfully." });
 // //   } catch (error) {
 // //     console.error(

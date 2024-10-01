@@ -1,14 +1,15 @@
-import { RequestHandler, Response, Request, raw } from "express";
+import { RequestHandler, Response, Request, raw,NextFunction } from "express";
 import { Registrations, db } from "../model/registrations";
 import { userPost } from "../requests/userRequest";
+import {
+  acadmicEnum,
+  participationNameEnum,
+  specializationEnum,
+  userGet,
+} from "../requests/userRequest";
+import { getUserRequestHandler, getUserRequest } from "../requests/adimRequest";
 
-export enum specializationEnum {
-  Preparatory = 1,
-  Electrical,
-  Mechanical,
-  Architecture,
-  Civil,
-}
+
 
 let post: RequestHandler = async (req: Request<{}, {}, userPost, {}>, res) => {
   try
@@ -98,4 +99,162 @@ let post: RequestHandler = async (req: Request<{}, {}, userPost, {}>, res) => {
   }
 };
 
-export const userController = { post };
+const get: getUserRequestHandler = async (
+  req: getUserRequest,
+  res: Response
+) => {
+  try {
+  let querryString = "select * from Registrations ";
+  let values = [];
+  let index: number = 1;
+  let isnotfirst = (num: number) => num > 1;
+  if (Object.entries(req.query).length !== 0) {
+    if (req.query.name) {
+      querryString += `where name = $${index++} `;
+      values.push(req.query.name);
+    }
+    if (req.query.email) {
+      querryString += `${
+        isnotfirst(index) ? "AND" : "where"
+      } email = $${index++} `;
+      values.push(req.query.email);
+    }
+    if (!isNaN(parseInt(req.query.year))) {
+      querryString += `${
+        isnotfirst(index) ? "AND" : "where"
+      } year = $${index++} `;
+      values.push(req.query.year);
+    }
+    if (!isNaN(parseInt(req.query.spec))) {
+      querryString += `${
+        isnotfirst(index) ? "AND" : "where"
+      } spec = $${index++} `;
+      values.push(req.query.spec);
+    }
+    if (!isNaN(parseInt(req.query.competition))) {
+      querryString += `${
+        isnotfirst(index) ? "AND" : "where"
+      } competition = $${index++} `;
+      values.push(req.query.competition);
+    }
+    if (req.query.teamName) {
+      querryString += `${
+        isnotfirst(index) ? "AND" : "where"
+      } "teamName" = $${index++} `;
+      values.push(req.query.teamName);
+    }
+  }
+  let rows: Registrations[] = (await db.query(querryString, values)).rows;
+  let users: userGet[] = [];
+  rows.forEach((Attendee) => {
+    users.push({
+      name: Attendee.name,
+      email: Attendee.email,
+      phone: Attendee.phone,
+      year: acadmicEnum[Attendee.year],
+      spec: specializationEnum[Attendee.spec],
+      competition: participationNameEnum[Attendee.competition],
+      why: Attendee.reason,
+      comments: Attendee.comments,
+      expectations: Attendee.expectations,
+      teamname: Attendee.teamName,
+      experience: Attendee.experience,
+    });
+  });
+
+  res.status(200).json(users);}
+  catch (error) {
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+
+const getbyid: RequestHandler = async (
+  req: Request<any, Registrations, {}, {}>,
+  res: Response
+) => {
+  console.log(req.params.index);
+  const id = parseInt(req.params.index, 10);
+  if (isNaN(id) || id < 0) {
+    res.status(400).json({ error: "invalid registration id." });
+  } else {
+    try {
+      const user: Registrations = (
+        await db.query("select * from registrations where id = $1", [id])
+      ).rows[0];
+      if (user) {
+        let userToBeSent: userGet = {
+          name: user.name,
+          email: user.email,
+          phone: user.phone,
+          experience: user.experience,
+          year: acadmicEnum[user.year],
+          spec: specializationEnum[user.spec],
+          competition: participationNameEnum[user.competition],
+          why: user.reason,
+          comments: user.comments,
+          expectations: user.expectations,
+          teamname: user.teamName,
+        };
+        res.status(200).json(userToBeSent);
+      } else {
+        res.status(404).json({ message: "User not found." });
+      }
+    } catch (error) {
+      console.log("Error fetching user at adminController.ts getRegister");
+      res.status(500).json({ error: "Internal server error." });
+    }
+  }
+};
+
+
+const deleteRegister: RequestHandler = async (req: Request, res: Response) => {
+  const id = parseInt(req.params.index, 10);
+  if (isNaN(id) || id < 0) {
+    res.status(400).json({ error: "invalid registration id." });
+  } else {
+    try {
+      const user = await db.query("select * from registrations where id = $1", [
+        id,
+      ]);
+
+      if (user.rows.length === 0) {
+        res.status(404).json({ message: "registration  not found." });
+      } else {
+        const result = await db.query(
+          "DELETE FROM registrations WHERE id = $1",
+          [id]
+        );
+        res.status(200).json({ message: "registration deleted successfully." });
+      }
+    } catch (error) {
+      console.log(error)
+      console.log("Error deleting user at userController.ts deleteRegister");
+      res.status(500).json({ error: "Internal server error." });
+    }
+  }
+};
+
+const loginAdmin = async (
+  req: Request<{}, {}, {  password: string }, {}>,
+  res: Response,
+  next: NextFunction
+) => {
+  const { password } = req.body;
+  if (!password) {
+    res.status(400).json({ message: "Login Failed!" });
+  } else {
+    if (password === process.env.PASSWORD) {
+      next();
+    } else {
+      res.status(400).json({ message: "wrong password!" });
+    }
+  }
+};
+
+export const userController = { post,
+  get:get,
+  getbyid,
+  deleteRegister,
+  loginAdmin
+ };

@@ -7,7 +7,7 @@ export interface userGetQuerry {
   spec: string;
   competition: string;
   why: string;
-  teamname: string;
+  teamName: string;
 }
 
 export type getUserRequest = Request<

@@ -19,3 +19,12 @@
 //   adminController.loginAdmin,
 //   adminController.deleteRegister
 // );
+
+
+
+
+
+
+
+
+////////////////////////////////////to be added later/////////////////////////////////////////

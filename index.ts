@@ -1,9 +1,6 @@
 import  express  from "express";
-// import { db } from "./model/registrations";
-// import { Attendees } from "./model/registrations";
 import { userRouter } from "./Routers/users";
-// import { adminRouter } from "./Routers/admin";
-
+import {response,Request,NextFunction } from "express";
 const swaggerUI = require("swagger-ui-express");
 const YAML = require("yamljs");
 
@@ -16,18 +13,25 @@ const app = express();
 app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(swaggerDocument));
 
 
-// const port = process.env.PORT || 3300;
-// app.listen(port, () => {
-// 	console.log(`Server is running on http://localhost:${port}`);
-// });
-
 app.use(express.json());
 app.use("/api/registrations", userRouter);
-// app.use("/api/admin",adminRouter);
 
 
+
+//health end point
 app.use("/api/health", (req, res) => {
     res.send({ status: "ok" });
 })
+app.use((err: any, req: any, res: any, next: NextFunction) => {
+  console.error(err.stack); // Log the error stack for debugging
 
+  // If the error has a status code, use it. Otherwise, default to 500.
+  const statusCode = err.statusCode || 500;
+
+  // Send the error response
+  res.status(statusCode).json({
+    status: "error",
+    message: err.message || "Internal Server Error",
+  });
+});
 app.listen(3000, () => console.log("Server started on port 3000"));

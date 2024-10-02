@@ -38,7 +38,7 @@ let post: RequestHandler = async (req: Request<{}, {}, userPost, {}>, res) => {
   spec = Number(spec);
   competition = Number(competition);
 
-  if(competition&&isNaN(Number(competition)))
+  if(isNaN(Number(competition)))
   {
     res.send(400).json({message:"competition is wrong"})
     return;
@@ -52,34 +52,29 @@ let post: RequestHandler = async (req: Request<{}, {}, userPost, {}>, res) => {
   if (name && name.length < 5) {
     res.status(400).json({ message: "name is too short" });
     return;
-  } else if (
-    phone &&
-    phone.length > 11 &&
-    phone.length > 13 &&
-    !isNaN(Number(phone))
-  ) {
+  } else if (phone.length > 11 || isNaN(Number(phone))) {
     res.status(400).json({ message: "phone is wrong" });
     return;
-  } else if (email && email.length < 5 && email.includes("@")) {
+  } else if (!email || email.length < 5 || !email.includes("@")) {
     res.status(400).json({ message: "email is wrong" });
     return;
   } else if (rows.find((r) => r.email === email)) {
     res.status(400).json({ message: "email already exists" });
     return;
-  } else if ((typeof year !== "number") || (!(year >= 1 && year <= 5))) {
+  } else if (isNaN(year) || (!(year >= 1 && year <= 5))) {
     console.log("year is", typeof year);
     res.status(400).json({ message: "academic year is wrong" });
     return;
-  } else if ((typeof spec !== "number") || !(spec >= 1 && spec <= 5)) {
+  } else if (isNaN(spec) || !(spec >= 1 && spec <= 5)) {
     console.log("spec is", spec);
     res.status(400).json({ message: "spec is wrong" });
     return;
-  } else if ((typeof competition !== "number") || !(competition >= 1 && competition <= 3)) {
+  } else if (isNaN(competition) || !(competition >= 1 && competition <= 2)) {
     console.log("competition is", competition);
     res.status(400).json({ message: "competition is wrong" });
     return;
   } 
-  else if((competition===2 ||competition===3) && (!teamName||!reason||!experience))
+  else if((competition===2) && (!teamName||!reason||!experience))
     {
       res.status(400).json({ message: "teamname or reason or experience is wrong" });
       return;

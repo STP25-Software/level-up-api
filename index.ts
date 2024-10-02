@@ -12,13 +12,13 @@ const app = express();
 
 app.use(express.json());
 
-app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(swaggerDocument));
+app.use("/docs", swaggerUI.serve, swaggerUI.setup(swaggerDocument));
 
-app.use("/api/registrations", userRouter);
+app.use("/registrations", userRouter);
 
 
 //health end point
-app.use("/api/health", (req, res) => {
+app.use("/health", (req, res) => {
     res.send({ status: "ok" });
 })
 

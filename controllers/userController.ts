@@ -34,6 +34,10 @@ let post: RequestHandler = async (req: Request<{}, {}, userPost, {}>, res) => {
     expectations,// Corrected "participation"
   } = req.body;
 
+  year = Number(year);
+  spec = Number(spec);
+  competition = Number(competition);
+
   if(competition&&isNaN(Number(competition)))
   {
     res.send(400).json({message:"competition is wrong"})
@@ -63,7 +67,7 @@ let post: RequestHandler = async (req: Request<{}, {}, userPost, {}>, res) => {
     res.status(400).json({ message: "email already exists" });
     return;
   } else if ((typeof year !== "number") || (!(year >= 1 && year <= 5))) {
-    console.log("year is", year);
+    console.log("year is", typeof year);
     res.status(400).json({ message: "academic year is wrong" });
     return;
   } else if ((typeof spec !== "number") || !(spec >= 1 && spec <= 5)) {

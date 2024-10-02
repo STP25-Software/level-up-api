@@ -33,6 +33,10 @@ let post: RequestHandler = async (req: Request<{}, {}, userPost, {}>, res) => {
     experience,
     expectations,// Corrected "participation"
   } = req.body;
+  year = Number(year);
+  spec = Number(spec);
+  competition = Number(competition);
+  
   if(competition&&isNaN(Number(competition)))
   {
     res.send(400).json({message:"competition is wrong"})

@@ -36,7 +36,7 @@ let post: RequestHandler = async (req: Request<{}, {}, userPost, {}>, res) => {
   year = Number(year);
   spec = Number(spec);
   competition = Number(competition);
-  
+
   if(competition&&isNaN(Number(competition)))
   {
     res.send(400).json({message:"competition is wrong"})
@@ -65,13 +65,16 @@ let post: RequestHandler = async (req: Request<{}, {}, userPost, {}>, res) => {
   } else if (rows.find((r) => r.email === email)) {
     res.status(400).json({ message: "email already exists" });
     return;
-  } else if ((!year&&typeof year !== "number") || (!(year >= 1 && year <= 5))) {
-    res.status(400).json({ message: "academicyear is wrong" });
+  } else if ((typeof year !== "number") || (!(year >= 1 && year <= 5))) {
+    console.log("year is", year);
+    res.status(400).json({ message: "academic year is wrong" });
     return;
-  } else if ((!spec && typeof spec !== "number") || !(spec >= 1 && spec <= 5)) {
+  } else if ((typeof spec !== "number") || !(spec >= 1 && spec <= 5)) {
+    console.log("spec is", spec);
     res.status(400).json({ message: "spec is wrong" });
     return;
-  } else if ((!competition && typeof competition !== "number") || !(competition >= 1 && competition <= 3)) {
+  } else if ((typeof competition !== "number") || !(competition >= 1 && competition <= 3)) {
+    console.log("competition is", competition);
     res.status(400).json({ message: "competition is wrong" });
     return;
   } 

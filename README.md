@@ -27,11 +27,9 @@ The api for the Level Up 3.0 event.
         "year": 1,
         "spec": 1,
         "competition": 2,
-        "participation": {
-            "teamName": "Eagles",
-            "reason": "I love competitions",
-            "experience": "I'm an award winner programmer",
-        },
+         "teamName": "Eagles",
+         "reason": "I love competitions",
+        "experience": "I'm an award winner programmer",
         "expectations": "It will be awesome",
         "comments": "lovely-looking form"
     }

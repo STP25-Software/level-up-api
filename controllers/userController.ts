@@ -9,6 +9,11 @@ import {
 } from "../requests/userRequest";
 import { getUserRequestHandler, getUserRequest } from "../requests/adimRequest";
 
+import dotenv from "dotenv";
+
+// Load environment variables from .env file
+dotenv.config();
+
 
 
 let post: RequestHandler = async (req: Request<{}, {}, userPost, {}>, res) => {
